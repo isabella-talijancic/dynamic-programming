@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Main contains all necessary classes and determines ...
+ * Main contains all necessary classes and, when 
+ * given a String, can determine if it can be “split” 
+ * into one or more words such that each of the words 
+ * appear in the book, Alice in Wonderland. 
  * 
  * UTSA CS 3343 - Project 3
  * Spring 2023
@@ -17,51 +20,94 @@ import java.util.ArrayList;
 
 public class Main {
     
-    public static void main(String[] args) {
-        // Load the word list from file
-        Set<String> dictionary = new HashSet<String>();
-        try {
-            Scanner sc = new Scanner(new File("src/aliceInWonderlandDictionary.txt"));
-            while (sc.hasNext()) {
-                dictionary.add(sc.next());
+    public static void main ( String [ ] args ) 
+    {
+    	
+        //Now loading words from the dictionary
+        Set < String > aiwDictionary = new HashSet < String > ( ) ;
+        
+        //Using try-catch block for potential exception
+        try 
+        {
+        	
+            Scanner readingInAIW = new Scanner ( new File ( "src/aliceInWonderlandDictionary.txt" ) ) ;
+            
+            while ( readingInAIW.hasNext ( ) ) 
+            {
+            	
+            	aiwDictionary.add ( readingInAIW.next ( ) ) ;
+           
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            
+        } 
+        
+        catch ( FileNotFoundException e ) 
+        {
+        	
+            e.printStackTrace ( ) ;
+        
         }
         
-        // Read input string from user input
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a string: ");
-        String input = scanner.nextLine();
+        //Reading in user input String
+        Scanner readingInUI = new Scanner ( System.in ) ;
+
+        System.out.print ( "Enter a string: " ) ;
         
-        // Set up dynamic programming table
-        List<List<String>> c = new ArrayList<>();
-        for (int i = 0; i < input.length() + 1; i++) {
-            c.add(new ArrayList<String>());
+        String textToSplit = readingInUI.nextLine ( ) ;
+        
+        //Dynamic Programming table building
+        List < List < String > > dynamicTable = new ArrayList < > ( ) ;
+        
+        for ( int i = 0; i < textToSplit.length ( ) + 1; i++ ) 
+        {
+        	
+        	dynamicTable.add ( new ArrayList < String > ( ) ) ;
+        
         }
-        c.get(0).add("");
         
-        // Fill in table bottom-up
-        for (int i = 1; i <= input.length(); i++) {
-            for (int j = i-1; j >= 0; j--) {
-                if (!c.get(j).isEmpty() && dictionary.contains(input.substring(j, i))) {
-                    List<String> split = new ArrayList<>(c.get(j));
-                    split.add(input.substring(j, i));
-                    if (c.get(i).isEmpty() || split.size() < c.get(i).size()) {
-                        c.set(i, split);
+        dynamicTable.get ( 0 ) .add ( "" ) ;
+        
+        //Establishing values inside of the dynamic table
+        for ( int i = 1; i <= textToSplit.length ( ); i++ ) 
+        {
+        	
+            for ( int j = i - 1; j >= 0; j-- ) 
+            {
+            	
+                if ( !dynamicTable.get ( j ) .isEmpty ( ) && aiwDictionary.contains ( textToSplit.substring ( j, i ) ) ) 
+                {
+                	
+                    List < String > split = new ArrayList < > ( dynamicTable.get ( j ) ) ;
+                    
+                    split.add ( textToSplit.substring ( j, i ) ) ;
+                    if ( dynamicTable.get ( i ).isEmpty ( ) || split.size ( ) < dynamicTable.get ( i ).size ( ) ) 
+                    {
+                     
+                    	dynamicTable.set ( i, split ) ;
+                    
                     }
+        
                 }
+                
             }
+
         }
         
-        // If no valid split found, output "cannot be split"
-        if (c.get(input.length()).isEmpty()) {
-            System.out.println(input + " cannot be split into AiW words.");
+        // In the case that there is no valid split, print out, "cannot be split".
+        if ( dynamicTable.get ( textToSplit.length ( ) ).isEmpty ( ) ) 
+        {
+        	
+            System.out.println ( textToSplit + " cannot be split into AiW words." ) ;
+            
             return;
+        
         }
         
-        // Output the minimum number of splits and the resulting words
-        System.out.print(input + " can be split into " + (c.get(input.length()).size()-1) + " AiW words: ");
-        System.out.println(String.join(" ", c.get(input.length())));
+        //Displaying the minimum amount of splits actual words
+        System.out.print ( textToSplit + " can be split into " + ( dynamicTable.get ( textToSplit.length ( ) ).size ( ) - 1 ) + " AiW words: " ) ;
+        
+        System.out.println ( String.join ( " ", dynamicTable.get ( textToSplit.length ( ) ) ) ) ;
+    
     }
+
 }
