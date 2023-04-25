@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Main contains all necessary classes and determines ...
@@ -53,20 +56,20 @@ public class Main {
         }
         
         // Output the minimum number of splits and the resulting words
-        System.out.print(input + " can be split into " + c[input.length()] + " AiW words: ");
+        List<String> words = new ArrayList<>();
         int i = input.length();
         while (i > 0) {
             for (int j = i-1; j >= 0; j--) {
                 if (c[j] != Integer.MAX_VALUE && dictionary.contains(input.substring(j, i))) {
-                    System.out.print(input.substring(j, i));
-                    if (j > 0) {
-                        System.out.print(" ");
-                    }
+                    words.add(input.substring(j, i));
                     i = j;
                     break;
                 }
             }
         }
-        System.out.println();
+        Collections.reverse(words);
+        System.out.print(input + " can be split into " + c[input.length()] + " AiW words: ");
+        System.out.println(String.join(" ", words));
+
     }
 }
