@@ -24,7 +24,6 @@ public class Main
     public static void main ( String [ ] args ) 
     {
     	
-        //Now loading words from the dictionary
         Set < String > aiwDictionary = new HashSet < String > ( ) ;
         
         //Using try-catch block for potential exception
@@ -49,14 +48,14 @@ public class Main
         
         }
         
-        //Reading in user input String
+        //Reading in user input
         Scanner readingInUI = new Scanner ( System.in ) ;
 
-        System.out.print ( "Enter a string: " ) ;
+        System.out.print ( "Enter string: " ) ;
         
         String textToSplit = readingInUI.nextLine ( ) ;
         
-        //Dynamic Programming table building
+        //Initializing dynamic programming table and values
         List < List < String > > dynamicTable = new ArrayList < > ( ) ;
         
         for ( int i = 0; i < textToSplit.length ( ) + 1; i++ ) 
@@ -68,7 +67,6 @@ public class Main
         
         dynamicTable.get ( 0 ) .add ( "" ) ;
         
-        //Establishing values inside of the dynamic table
         for ( int i = 1; i <= textToSplit.length ( ); i++ ) 
         {
         	
@@ -94,7 +92,7 @@ public class Main
 
         }
         
-        // In the case that there is no valid split, print out, "cannot be split".
+        // Takes care of cases where input can't be split
         if ( dynamicTable.get ( textToSplit.length ( ) ).isEmpty ( ) ) 
         {
         	
@@ -104,7 +102,7 @@ public class Main
         
         }
         
-        //Displaying the minimum amount of splits actual words
+        //Printing out the fewest number of splits and the end result
         System.out.print ( textToSplit + " can be split into " + ( dynamicTable.get ( textToSplit.length ( ) ).size ( ) - 1 ) + " AiW words: " ) ;
         
         System.out.println ( String.join ( " ", dynamicTable.get ( textToSplit.length ( ) ) ) ) ;
